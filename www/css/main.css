@@ -1,0 +1,203 @@
+html {
+    font-size: 13pt;
+}
+
+body {
+    background: url(/img/binary-wall.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: #003;
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body.setup {
+    background: url(/img/binary-wall-greyscale.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: #222;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: normal;
+}
+h1 {
+    text-transform: uppercase;
+}
+.jumbotron {
+    background: none;
+    margin-bottom:0;
+    padding-bottom: 1rem;
+}
+
+.jumbotron h1 {
+    font-size: 4rem;
+    margin-bottom: 0;
+    padding-top: 3rem;
+    padding-bottom: 0;
+}
+
+.jumbotron h1+p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.6rem;
+    line-height: 1.125em;
+    text-transform: uppercase;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.jumbotron p.lead {
+    margin-top:0;
+}
+
+.homepage .jumbotron p.lead {
+    margin-top:4rem;
+}
+
+.homepage .jumbotron h1 {
+    padding-top: 5rem;
+}
+
+.card {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.card > a:link, .card > a:visited, .card > a:hover, .card > a:active {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: 1px solid #56a;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.input-group-text {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #56a;
+}
+
+input:valid {
+    background-color: rgba(0,51,0,0.5);
+}
+
+input:invalid {
+    background-color: rgba(85,0,0,0.5);
+}
+
+.name-and-password .input-group-text {
+    background-color: transparent;
+    border: none;
+}
+
+.name-and-password .input-group input {
+    border-radius: .25rem .25rem .25rem .25rem !important;
+}
+
+.btn-warning {
+    background-color: #d90;
+    border-color: #d90;
+}
+
+.form-control:focus {
+    color: #fff;
+}
+
+.feedback {
+    font-size: 0.8em;
+    font-weight: 700;
+}
+
+.ok {
+    color: #0c0;
+}
+
+.notok {
+    color: #f00;
+}
+
+.alert-danger {
+    background-color: rgba(119,0,0,0.5);
+    color: #fff;
+    padding-top: 1.5rem;
+    padding-bottom: : 0;
+}
+
+li+li {
+    margin-top: 0.5rem;
+}
+
+.ps0 { background-color: #f88; }
+.ps1 { background-color: #f88; }
+.ps2 { background-color: #fc8; }
+.ps3 { background-color: #ff6; }
+.ps4 { background-color: #4f4; }
+
+.fixed-bottom {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+body {
+    padding-bottom: 120px;
+}
+
+a:link, a:visited {
+    color: #ff0;
+}
+
+a:hover {
+    text-shadow: 0 0 3px #fff;
+    text-decoration: none;
+}
+
+a:active {
+    color: #fff;
+}
+
+a:focus {
+    outline: 1px dotted rgba(255, 255, 255, 0.4);
+}
+
+a.btn-like:link, a.btn-like:visited, a.btn-like:hover, a.btn-like:active {
+    color: #fff;
+    text-shadow: none;
+}
+
+code {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: normal;
+    color: #bbd;
+    font-size: 100%;
+}
+
+@media(max-width:767px) {
+    html {
+        font-size: 10pt;
+    }
+    .jumbotron {
+        margin-bottom: 1rem;
+    }
+    .jumbotron h1 {
+        font-size: 3.5rem;
+        padding-top: 3rem;
+    }
+    .jumbotron h1+p {
+        font-size: 1.2rem;
+    }
+    .jumbotron p.lead {
+        margin-top:2rem;
+    }
+    ul {
+        padding-left: 1rem;
+    }
+}

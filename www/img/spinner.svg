@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink">
+    <g fill="#000">
+        <circle cx="4" cy="16" stroke-width="0" r="2">
+            <animate attributeName="fill-opacity" dur="0.8s" values=".4;.6;.8;1;.8;.6;.4;.4" repeatCount="indefinite"></animate>
+            <animate attributeName="r" dur="0.8s" values="2.4;2.4;2.8;3.4;4;3.4;2.8;2.4" repeatCount="indefinite"></animate>
+        </circle>
+        <circle cx="16" cy="16" stroke-width="0" r="3">
+            <animate attributeName="fill-opacity" dur="0.8s" values=".4;.4;.6;.8;1;.8;.6;.4" repeatCount="indefinite"></animate>
+            <animate attributeName="r" dur="0.8s" values="2.8;2.4;2.4;2.8;3.4;4;3.4;2.8" repeatCount="indefinite"></animate>
+        </circle>
+        <circle cx="28" cy="16" stroke-width="0" r="3">
+            <animate attributeName="fill-opacity" dur="0.8s" values=".6;.4;.4;.6;.8;1;.8;.6" repeatCount="indefinite"></animate>
+            <animate attributeName="r" dur="0.8s" values="3.4;2.8;2.4;2.4;2.8;3.4;4;3.4" repeatCount="indefinite"></animate>
+        </circle>
+    </g>
+</svg>

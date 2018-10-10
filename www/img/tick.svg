@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink">
+    <g fill="none" stroke="#090" stroke-width="6" stroke-linejoin="miter" stroke-miterlimit="6" stroke-linecap="butt">
+        <path d="M4 15 11 25 30 6" stroke-dasharray="40" stroke-dashoffset="40">
+            <animate attributeName="stroke-dashoffset" dur="0.5s" values="40;28;0" repeatCount="1" fill="freeze"></animate>
+        </path>
+    </g>
+</svg>
