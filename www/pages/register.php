@@ -34,7 +34,7 @@ $page_content = <<<END_PAGE
     var nonce = "$nonce";
   </script>
   <div class="jumbotron text-center">
-    <h1>🔒<svg viewBox="0 0 10 10" style="width:1em; height:1em"><path d="M0 0 10 0 10 10 0 10Z"/></svg>Priv8Chat</h1>
+    <h1>🔒Priv8Chat</h1>
     <p>New User Registration</p>
   </div>
   <div class="container">
@@ -48,11 +48,11 @@ $page_content = <<<END_PAGE
             of <code>dave</code>, try something like <code>david_eric_grohl_69</code>). User names are not case-sensitive.</li>
           <li><strong>Email address:</strong> If you'd rather not share your personal email address, that's fine. Just use a
             temporary anonymous mailbox at <a href="https://www.guerrillamail.com/">guerrillamail.com</a> instead. But note
-            it down somewhere; you'll need it if you ever want to reset your password.</li>
+            it down somewhere; you'll need it if you ever want to reset your pass phrase.</li>
           <li><strong>Pass phrase:</strong> You can enter pretty much anything here as long as it is sufficiently secure.
             However, you might want to avoid emojis and special characters like ® and µ, as these can cause problems in some
             browsers. Unlike your user name, the pass phrase is <strong>case sensitive</strong>.  If you like, you can use
-            one of the following buttons to generate a password automatically:
+            one of the following buttons to generate a pass phrase automatically:
             <ul class="mt-2">
               <li><a class="btn-like btn btn-sm btn-success mr-2" style="min-width:6em; padding: .125rem .25rem;" href="javascript:" onclick="passwordShow(); do { \$('#password').val(memorablePassphrase(4)); } while (zxcvbn($('#password').val(), [$('#username').val()]).score < 4); checkPassword(); return false" tabindex="3">Memorable</a> (a four-word phrase that should be fairly easy to remember)</li>
               <li><a class="btn-like btn btn-sm btn-warning mr-2" style="min-width:6em; padding: .125rem .25rem;" href="javascript:" onclick="passwordShow(); do { \$('#password').val(randomPassword(12)); } while (zxcvbn($('#password').val(), [$('#username').val()]).score < 4); checkPassword(); return false" tabindex="4">Random</a> (a random alphanumeric password; short, but less memorable)</li>
