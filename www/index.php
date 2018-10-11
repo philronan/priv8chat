@@ -21,6 +21,18 @@ if (!function_exists('_')) {
     function _($s) { return $s; }
 }
 
+// Session parameters
+session_start([
+    'save_path' => "$ROOT/.sessions",
+    'name' => 'PRIV8COOKIE',
+    'use_strict_mode' => TRUE,
+    'use_cookies' => TRUE,
+    'use_only_cookies' => TRUE,
+    'cookie_lifetime' => 86400,
+    'cookie_path' => '/',
+    'cookie_secure' => TRUE,
+    'cookie_httponly' => TRUE
+]);
 
 ob_start();
 

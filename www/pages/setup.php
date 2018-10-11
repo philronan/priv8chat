@@ -102,6 +102,11 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = sprintf(_("Can't modify %s. Please check the directory permissions"), $ROOT) . $chown_help;
         break;
     }
+    // Create a directory for session data
+    if (!(is_dir("$ROOT/.sessions") && is_writable("$ROOT/.sessions")) && !mkdir("$ROOT/.sessions", 0700)) {
+        $errors[] = sprintf(_("Can't create session data directory in %s. Please check the directory permissions"), $ROOT);
+        break;
+    }
     $master_key = bin2hex(openssl_random_pseudo_bytes(16));
     $pass_64 = base64_encode($db_password);
     $config_txt = "DBNAME='$db_name'\nDBUSER='$db_user'\nDBPASS='$pass_64'\nMASTERKEY='$master_key'\n";
