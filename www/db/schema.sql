@@ -4,8 +4,8 @@ DROP TABLE IF EXISTS priv8nonce;
 
 CREATE TABLE priv8users (
     user_id             INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    username_encrypted  VARCHAR(256) NOT NULL UNIQUE,
-    email_hashed        VARCHAR(160) NOT NULL UNIQUE KEY,
+    username_encrypted  CHAR(108) NOT NULL UNIQUE,
+    email_hashed        CHAR(44) NOT NULL UNIQUE KEY,
     password            VARCHAR(72) NOT NULL,
     conf_link_sent      TIMESTAMP NOT NULL DEFAULT 0,
     conf_link_clicked   TIMESTAMP NOT NULL DEFAULT 0,

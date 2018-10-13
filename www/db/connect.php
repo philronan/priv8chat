@@ -8,21 +8,21 @@ $SECRET_KEYS = parse_ini_file("$ROOT/.config");
 
 $GLOBALS['DBNAME'] = $SECRET_KEYS['DBNAME'];
 $GLOBALS['DBUSER'] = $SECRET_KEYS['DBUSER'];
-$GLOBALS['DBPASS'] = $SECRET_KEYS['DBPASS'];
+$GLOBALS['DBPASS'] = base64_decode($SECRET_KEYS['DBPASS']);
 
 // Use the master key to generate other keys/salt values
 $key = hex2bin($SECRET_KEYS['MASTERKEY']);
 $username_key = openssl_encrypt('usernameusername', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 $message_key  = openssl_encrypt('messagemessageme', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
-$email_salt   = openssl_encrypt('emailsaltemailsa', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 $nonce_key    = openssl_encrypt('noncenoncenoncen', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
+$salt         = openssl_encrypt('saltsaltsaltsalt', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 
 
 $GLOBALS['USERNAME_KEY'] = $username_key;
 $GLOBALS['MESSAGE_KEY'] = $message_key;
-// convert this one to ASCII because it is concatenated to the email address
-$GLOBALS['EMAIL_SALT'] = base64_encode($email_salt);
 $GLOBALS['NONCE_KEY'] = $nonce_key;
+// convert this one to ASCII because it is concatenated to the email address
+$GLOBALS['SALT'] = base64_encode($salt);
 
 // Remove the master key from memory. Not sure this is necessary, but anyway...
 unset($key, $SECRET_KEYS);
@@ -44,7 +44,10 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
     ini_set('session.cookie_secure', true);
 }
 
-session_start();
+if(!isset($_SESSION)) {
+    session_start();
+}
+
 if (!isset($_SESSION['tick_count'])) {
     $_SESSION['tick_count'] = 1;
     $_SESSION['start_time'] = time();

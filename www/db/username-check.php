@@ -2,15 +2,13 @@
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 include("$ROOT/db/connect.php");
-include("$ROOT/crypto/primitives.php");
+include("$ROOT/crypto.php");
 
-$username = isset($_GET['n']) ? $_GET['n'] : '';
-$nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
-if ($nonce != $_SESSION['register_nonce']) die ("Authentication error");
+$username = @$_GET['n'];
 
 sleep(2);
 $data = [ "name" => $username, "valid" => true, "comment" => "Looks OK :-)" ];
-if (preg_match('/^[A-Za-z0-9_]{6,64}$/', $username) != 1) {
+if (preg_match('/^[A-Za-z0-9_]{1,64}$/', $username) != 1) {
     $data['valid'] = false;
     $data['comment'] = "Invalid format.";
 }
