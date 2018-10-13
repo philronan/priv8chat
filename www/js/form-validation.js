@@ -25,12 +25,12 @@ function checkUserName() {
         $('#feedback-name').html('This is a required field').removeClass('ok').addClass('notok');
         return;
     }
-    if (/^[A-Za-z0-9_]{6,64}$/.test(n)) {
+    if (/^[A-Za-z0-9_]{1,64}$/.test(n)) {
         $('#spin-name').attr('data', '/img/spinner.svg');
         $('#feedback-name').html('&nbsp;').removeClass('notok').addClass('ok');
         $.ajax({
           url: "../db/username-check.php",
-          data: { "n": n, "nonce": nonce },
+          data: { "n": n },
           dataType: "json"
         }).done(function(res) {
           if (res.name == $('#username').val()) {

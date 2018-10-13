@@ -1491,3 +1491,30 @@ function memorablePassphrase(numWords) {
     }
     return pw;
 }
+
+function random_memorable() {
+    passwordShow();
+    do {
+        $('#password').val(memorablePassphrase(4));
+    } while (zxcvbn($('#password').val(), [$('#username').val()]).score < 4);
+    checkPassword();
+    return false;
+}
+
+function random_short() {
+    passwordShow();
+    do {
+        $('#password').val(randomPassword(12));
+    } while (zxcvbn($('#password').val(), [$('#username').val()]).score < 4);
+    checkPassword();
+    return false;
+}
+
+function random_extreme() {
+    passwordShow();
+    do {
+        $('#password').val(strongPassword());
+    } while (zxcvbn($('#password').val(), [$('#username').val()]).score < 4);
+    checkPassword();
+    return false;
+}
