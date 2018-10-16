@@ -1,8 +1,8 @@
 <?php
 
-$ROOT = $_SERVER['DOCUMENT_ROOT'];
-include("$ROOT/db/connect.php");
-include("$ROOT/crypto.php");
+$APPROOT = dirname(dirname(__FILE__)); // **TODO** Fix ugly code
+include("$APPROOT/db/connect.php");    // (should indlude /index.php instead)
+include("$APPROOT/crypto.php");
 
 $username = @$_GET['n'];
 
@@ -24,3 +24,4 @@ $result = json_encode($data) . "\n";
 header("Content-Type: application/json; charset=utf-8");
 header("Content-Length: " . strlen($result));
 echo $result;
+

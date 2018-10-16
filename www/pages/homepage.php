@@ -5,8 +5,8 @@ if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
 $page_title = 'Home Page';
 $page_content = <<<END_PAGE
 <div class="jumbotron text-center">
-  <h1>🔒Priv8Chat</h1>
-  <p>A secure online messaging system</p>
+  <h1><span class="fa fa-user-secret"></span>Priv8Chat</h1>
+  <p>Secure online messaging</p>
 </div>
 <div class="container">
   <div class="row mb-1">
@@ -47,4 +47,4 @@ $page_content = <<<END_PAGE
 </div>
 END_PAGE;
 
-include "$ROOT/views/main.php";
+include $GLOBALS['APPROOT'] . '/views/main.php';

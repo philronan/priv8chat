@@ -55,13 +55,13 @@ function randomPassword(numChars) {
 
 function strongPassword() {
 
-    // Generates a password with >256 bits of entropy
+    // Generates a password with ~128 bits of entropy
     // Using an alphabet of 68 characters, this requires a password
-    // length of 42 characters
+    // length of 21 characters
 
     var alphabet = 'bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ256789#$%^*()-_=+[{]};:|,./?';
     var i, pw = "";
-    for (i=0; i<42; i++) pw += alphabet.charAt(rndRange(0, alphabet.length-1));
+    for (i=0; i<21; i++) pw += alphabet.charAt(rndRange(0, alphabet.length-1));
     return pw;
 }
 

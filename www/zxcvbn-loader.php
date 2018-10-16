@@ -1,7 +1,7 @@
 <?php
 
 /* A simple wrapper for the Zxcvbn library */
-if (!isset($ROOT)) $ROOT = '.';
+$ROOT = dirname(__FILE__);
 require("$ROOT/zxcvbn/Matchers/MatchInterface.php");
 require("$ROOT/zxcvbn/Matchers/Match.php");
 require("$ROOT/zxcvbn/Matchers/DigitMatch.php");

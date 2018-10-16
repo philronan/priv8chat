@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+
+$base = $GLOBALS['WEBROOT'];
+
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -13,10 +17,41 @@
 
     <!-- Preload password strengthometer (needed on registration page) -->
     <script src="js/zxcvbn.js"<?php if ($path != 'register') echo ' defer'; ?>></script>
+    <script src="js/copytext.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <title>Priv8Chat :: <?php echo $page_title; ?></title>
 </head>
 <body class="<?php echo $path; ?>">
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+     <!-- Brand -->
+     <a class="navbar-brand" href="<?php echo $base; ?>/">Priv8chat</a>
+
+     <!-- Toggler/collapsibe Button -->
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+
+     <!-- Navbar links -->
+     <div class="collapse navbar-collapse" id="collapsibleNavbar">
+       <ul class="navbar-nav">
+         <li class="nav-item">
+           <a class="nav-link" href="<?php echo $base; ?>/inbox"><span class="fa fa-inbox"></span> Inbox</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="<?php echo $base; ?>/compose"><span class="fa fa-pencil"></span> Compose message</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="<?php echo $base; ?>/dbdbdump"><span class="fa fa-download"></span> DB dump</a>
+         </li>
+       </ul>
+       <ul class="navbar-nav ml-auto">
+         <li class="nav-item">
+           <a class="nav-link" href="<?php echo $base; ?>/logout"><span class="fa fa-sign-out"></span> Logout</a>
+         </li>
+       </ul>
+     </div>
+   </nav>
 <noscript>
     <div id="javascript_inactive_warning_container" class="container">
         <div class="fixed-top bg-warning">

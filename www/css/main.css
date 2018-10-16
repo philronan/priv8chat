@@ -38,7 +38,7 @@ h1 {
 .jumbotron h1 {
     font-size: 4rem;
     margin-bottom: 0;
-    padding-top: 3rem;
+    padding-top: 1rem;
     padding-bottom: 0;
 }
 
@@ -53,14 +53,6 @@ h1 {
 
 .jumbotron p.lead {
     margin-top:0;
-}
-
-.homepage .jumbotron p.lead {
-    margin-top:4rem;
-}
-
-.homepage .jumbotron h1 {
-    padding-top: 5rem;
 }
 
 .card {
@@ -133,8 +125,37 @@ input:invalid {
     padding-bottom: : 0;
 }
 
-li+li {
+.container li+li {
     margin-top: 0.5rem;
+}
+
+
+.modal-content {
+    background-color: rgba(0,20,50,0.85);
+    border: 2px solid rgba(50,60,100,0.85);
+    color: #9ab;
+}
+
+textarea {
+    background-color: rgba(0,0,0,0.5);
+    border: 2px solid rgba(50,60,100,0.85);
+    padding: 0.5em 1em;
+    font-family: monospace;
+    color: #789;
+}
+
+.modal-dialog {
+    max-width: 700px;
+}
+
+.modal-body textarea {
+    width: 100%;
+    font-size: 90%;
+}
+
+.modal-footer {
+    border-top: none;
+    padding-top: 0;
 }
 
 .ps0 { background-color: #f88; }

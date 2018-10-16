@@ -29,7 +29,7 @@ $db_password = randomPassword(20);
 $errors = [];
 
 while ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include("$ROOT/zxcvbn-loader.php");
+    include $GLOBALS['APPROOT'] . '/zxcvbn-loader.php';
     $db_name = @$_POST['db-name'];
     $db_user = @$_POST['db-user'];
     $db_password = @$_POST['db-password'];
@@ -37,11 +37,11 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (preg_match('/^[0-9A-Za-z_-]{1,64}$/', $db_name) != 1) {
         $errors[] = _("The database name can only contain up to 64 ASCII letters, digits, underscores and hyphens");
     }
-    // Unbelievable, but in MySQL v.5.6.34 on my iMac, the max user name length is just 16 characters!
-    if (preg_match('/^[0-9A-Za-z_-]{1,16}$/', $db_user) != 1) {
-        $errors[] = _("The database username can only contain up to 16 ASCII letters, digits, underscores and hyphens");
+    // In MySQL v.5.6.34 on my iMac, the max user name length is just 16 characters. But 32 seems to be common.
+    if (preg_match('/^[0-9A-Za-z_-]{1,32}$/', $db_user) != 1) {
+        $errors[] = _("The database username can only contain up to 32 ASCII letters, digits, underscores and hyphens");
     }
-    // Maximum password length = 32 (https://stackoverflow.com/q/7465204/1679849)
+    // Maximum password length = 32 (https://stackoverflow.com/q/7465204/1679849). We need at least 8 to keep zxcvbn happy
     if (preg_match('/^[\x20-\x7e]{8,32}$/', $db_password) != 1) {
         $errors[] = _("The database password must consist of 8–32 printable ASCII characters/spaces");
     }
@@ -57,7 +57,7 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
         break;
     }
     if (!@mysqli_real_connect($mysqli, 'localhost', $db_user, $db_password, $db_name)) {
-        $errors[] = sprintf(_("Can't connect to MySQL: %s"), mysqli_connect_error());
+        $errors[] = sprintf(_("Can't connect to MySQL: %s<br>(Did you remember to set up a MySQL database?)"), mysqli_connect_error());
         break;
     }
     if (!@$mysqli->set_charset("utf8")) {
@@ -95,64 +95,58 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
     @$mysqli->query("DROP TABLE IF EXISTS priv8nonce;");
 
     @$mysqli->query("CREATE TABLE priv8users (" .
-        "user_id             INT NOT NULL AUTO_INCREMENT PRIMARY KEY," .
-        "username_encrypted  VARCHAR(256) NOT NULL UNIQUE," .
-        "email_hashed        VARCHAR(160) NOT NULL UNIQUE KEY," .
-        "password            VARCHAR(72) NOT NULL," .
-        "conf_link_sent      TIMESTAMP NOT NULL DEFAULT 0," .
-        "conf_link_clicked   TIMESTAMP NOT NULL DEFAULT 0," .
-        "is_registered       BOOLEAN NOT NULL DEFAULT FALSE" .
-    ") DEFAULT CHARACTER SET ascii;");
+       " user_id             INT NOT NULL AUTO_INCREMENT PRIMARY KEY," .
+       " username_encrypted  CHAR(108) NOT NULL UNIQUE," .
+       " email_hashed        CHAR(44) NOT NULL UNIQUE KEY," .
+       " password            CHAR(60) NOT NULL," .
+       " conf_link_token     char(44) NOT NULL," .
+       " conf_link_sent      TIMESTAMP NOT NULL DEFAULT 0," .
+       " conf_link_clicked   TIMESTAMP NOT NULL DEFAULT 0," .
+       " is_registered       BOOLEAN NOT NULL DEFAULT FALSE" .
+    " ) DEFAULT CHARACTER SET ascii;");
 
     @$mysqli->query("CREATE TABLE priv8messages (" .
-        "message_id          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY," .
-        "from_user           INT NOT NULL," .
-        "to_user             INT NOT NULL," .
-        "when_sent           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," .
-        "message_subject     TEXT NOT NULL," .
-        "message_text        LONGTEXT NOT NULL," .
-        "has_been_read       BOOLEAN NOT NULL DEFAULT FALSE," .
-        "sender_deleted      BOOLEAN NOT NULL DEFAULT FALSE," .
-        "receiver_deleted    BOOLEAN NOT NULL DEFAULT FALSE" .
-    ") DEFAULT CHARACTER SET ascii;");
+       " message_id          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY," .
+       " from_user           INT NOT NULL," .
+       " to_user             INT NOT NULL," .
+       " when_sent           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," .
+       " message_subject     TEXT NOT NULL," .
+       " message_text        LONGTEXT NOT NULL," .
+       " has_been_read       BOOLEAN NOT NULL DEFAULT FALSE," .
+       " sender_deleted      BOOLEAN NOT NULL DEFAULT FALSE," .
+       " receiver_deleted    BOOLEAN NOT NULL DEFAULT FALSE" .
+    " ) DEFAULT CHARACTER SET ascii;");
     @$mysqli->query("ALTER TABLE priv8messages ADD INDEX from_user (from_user);");
     @$mysqli->query("ALTER TABLE priv8messages ADD INDEX to_user (to_user);");
     @$mysqli->query("ALTER TABLE priv8messages ADD INDEX when_sent (when_sent);");
 
-    @$mysqli->query("CREATE TABLE priv8nonce (" .
-        "id                  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY," .
-        "created             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" .
-    );");
-    @$mysqli->query("ALTER TABLE priv8nonce ADD INDEX created (created);");
-
-
 
     // OK, the MySQL account is working. Now we just need to store these
     // credentials in a .config file...
-    if (!is_writable($ROOT)) {
+    if (!is_writable($GLOBALS['APPROOT'])) {
         $chown_help = "";
         if (function_exists('posix_getpwuid') && function_exists('posix_getgrgid')) {
             $nixuser = posix_getpwuid(posix_getuid())['name'];
             $nixgroup = posix_getgrgid(posix_getgid())['name'];
-            $chown_help = sprintf(_("<br>(Try typing <code>sudo chown %s:%s %s</code> at a command prompt.)"), $nixuser, $nixgroup, $ROOT);
+            $chown_help = sprintf(_("<br>(Try typing <code>sudo chown %s:%s %s</code> at a command prompt.)"), $nixuser, $nixgroup, $GLOBALS['APPROOT']);
         }
-        $errors[] = sprintf(_("Can't modify %s. Please check the directory permissions"), $ROOT) . $chown_help;
+        $errors[] = sprintf(_("Can't modify %s. Please check the directory permissions"), $GLOBALS['APPROOT']) . $chown_help;
         break;
     }
     // Create a directory for session data
-    if (!(is_dir("$ROOT/.sessions") && is_writable("$ROOT/.sessions")) && !mkdir("$ROOT/.sessions", 0700)) {
-        $errors[] = sprintf(_("Can't create session data directory in %s. Please check the directory permissions"), $ROOT);
+    if (!(is_dir($GLOBALS['APPROOT'] . '/.sessions') && is_writable($GLOBALS['APPROOT'] . '/.sessions')) && !mkdir($GLOBALS['APPROOT'] . '/.sessions', 0700)) {
+        $errors[] = sprintf(_("Can't create session data directory in %s. Please check the directory permissions"), $GLOBALS['APPROOT']);
         break;
     }
     $master_key = bin2hex(openssl_random_pseudo_bytes(16));
     $pass_64 = base64_encode($db_password);
     $config_txt = "DBNAME='$db_name'\nDBUSER='$db_user'\nDBPASS='$pass_64'\nMASTERKEY='$master_key'\n";
-    if (!@file_put_contents("$ROOT/.config", $config_txt)) {
-        $errors[] = sprintf(_("Can't create config file at %s. Please check the file/directory permissions"), "$ROOT/.config");
+    if (!@file_put_contents($GLOBALS['APPROOT'] . '/.config', $config_txt)) {
+        $errors[] = sprintf(_("Can't create config file at %s. Please check the file/directory permissions"), $GLOBALS['APPROOT'] . '/.config');
         break;
     }
-    if (@file_get_contents("$ROOT/.config") !== $config_txt) {
-        $errors[] = sprintf(_("Can't read back config file from %s. Please check the file permissions"), "$ROOT/.config");
+    if (@file_get_contents($GLOBALS['APPROOT'] . '/.config') !== $config_txt) {
+        $errors[] = sprintf(_("Can't read back config file from %s. Please check the file permissions"), $GLOBALS['APPROOT'] . '/.config');
         break;
     }
 
@@ -182,16 +176,17 @@ if (count($errors) > 0) {
 $page_title = 'Setup';
 $page_content = <<<END_PAGE
 <div class="jumbotron text-center">
-  <h1>🔒Priv8Chat</h1>
+  <h1><span class="fa fa-user-secret"></span>Priv8Chat</h1>
   <p>A secure online messaging system</p>
 </div>
 <div class="container">
   <div class="row mb-1">
       <div class="col-sm-12">
       <p class="lead">You're nearly there! All you need to do now is set up a
-          database for this application, and fill in the details below. (The
-          database name and password have been pre-filled, but you can change
-          these values if you like. Just be sure to use a strong password.)</p>
+          database for this application, and fill in the details below. The
+          database name, user namee and password have been pre-filled, but you
+          can change these values if you like. Just be sure to use a strong
+          password. When you've created the database, submit this form.</p>
 $error_report
       </div>
   </div>
@@ -203,7 +198,7 @@ $error_report
         <input type="text" class="form-control" id="db-name" name="db-name"
           placeholder="(ASCII letters, digits, underscores and hyphens only. 64 character limit.)"
           title="ASCII letters, digits, underscores and hyphens only. 64 character limit"
-          pattern="[0-9A-Za-z_-]{1,}" required
+          pattern="[0-9A-Za-z_-]{1,}" required onchange="update_sql()"
           value="$db_name">
       </div>
       <div class="form-group">
@@ -211,24 +206,58 @@ $error_report
         <input type="text" class="form-control" id="db-user" name="db-user"
           placeholder="(ASCII letters, digits, underscores and hyphens only. 16 character limit.)"
           title="ASCII letters, digits, underscores and hyphens only. 16 character limit"
-          pattern="[0-9A-Za-z_-]{1,}" required
+          pattern="[0-9A-Za-z_-]{1,}" required onchange="update_sql()"
           value="$db_user">
       </div>
       <div class="form-group">
-        <label for="db-password">Database password:</label>
-        <input type="text" class="form-control" id="db-password" name="db-password"
-          placeholder="(Printable ASCII charcters and spaces only. From 8 to 32 characters.)"
+        <label for="db-password">Database password:</label> &nbsp; <a id="passwd-toggle"
+               href="javascript:void(0)" onclick="return togglePasswordReveal();"
+               data-state="show">(Hide)</a>
+        <input type="text" class="form-control" id="password" name="db-password"
+          placeholder="(Printable ASCII characters and spaces only. From 8 to 32 characters.)"
           title="Printable ASCII and spaces only. From 8 to 32 characters"
-          pattern="[ -~]{8,}" required
+          pattern="[ -~]{8,}" required onchange="update_sql()"
           value="$db_password">
       </div>
       <div class="text-center">
+        <a href="javascript:" class="btn-like btn btn-secondary" data-toggle="modal" data-target="#myModal">Generate MySQL code</a>
         <button type="submit" class="btn btn-default">Submit</button>
       </div>
       </form>
     </div>
   </div>
 </div>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>Run this script through MySQL to create your database:</p>
+<textarea id="mysqlcode" rows="7" cols="50">DROP DATABASE IF EXISTS `$db_name`;
+CREATE DATABASE `$db_name`;
+GRANT ALL ON `$db_name`.*
+    TO '$db_user'@'localhost'
+    IDENTIFIED BY '$db_password';
+FLUSH PRIVILEGES;
+</textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="copy_button" style="width:12em" onclick='copy_textarea_to_clipboard($("#mysqlcode"), $("#copy_button")); return false;'>Copy to clipboard</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+function update_sql() {
+    var dbname = $('#db-name').val();
+    var dbuser = $('#db-user').val();
+    var dbpass = $('#db-password').val();
+    var sql = "DROP DATABASE IF EXISTS `"+dbname+"`;\\nCREATE DATABASE `"+dbname+"`;\\nGRANT ALL ON `"+dbname+"`.*\\n    TO '"+dbuser+"'@'localhost'\\n    IDENTIFIED BY '"+dbpassword+"';\\nFLUSH PRIVILEGES;\\n";
+    $('#mysqlcode').val(sql);
+}
+</script>
+
 END_PAGE;
 
-include "$ROOT/views/main.php";
+include $GLOBALS['APPROOT'] . '/views/main.php';

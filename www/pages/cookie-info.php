@@ -4,8 +4,8 @@ if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
 
 $page_title = 'Cookie Statement';
 $page_content = <<<END_PAGE
-  <div class="jumbotron">
-    <h1>🔒Priv8Chat</h1>
+  <div class="jumbotron text-center">
+    <h1><span class="fa fa-user-secret"></span>Priv8Chat</h1>
     <p>About Cookies on this Site</p>
   </div>
   <div class="container">
@@ -41,4 +41,4 @@ $page_content = <<<END_PAGE
 
 END_PAGE;
 
-include "$ROOT/views/main.php";
+include "$GLOBALS['APPROOT']/views/main.php";

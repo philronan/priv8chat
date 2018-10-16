@@ -1,10 +1,9 @@
 <?php
 
-
 // Key scheduling, etc.
 
 // Fetch values of DBNAME, DBUSER, DBPASS and MASTERKEY
-$SECRET_KEYS = parse_ini_file("$ROOT/.config");
+$SECRET_KEYS = parse_ini_file($GLOBALS['APPROOT'] . '/.config');
 
 $GLOBALS['DBNAME'] = $SECRET_KEYS['DBNAME'];
 $GLOBALS['DBUSER'] = $SECRET_KEYS['DBUSER'];
@@ -16,11 +15,12 @@ $username_key = openssl_encrypt('usernameusername', 'aes-128-ecb', $key, OPENSSL
 $message_key  = openssl_encrypt('messagemessageme', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 $nonce_key    = openssl_encrypt('noncenoncenoncen', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 $salt         = openssl_encrypt('saltsaltsaltsalt', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
-
+$user_id_key  = openssl_encrypt('useriduseriduser', 'aes-128-ecb', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 
 $GLOBALS['USERNAME_KEY'] = $username_key;
 $GLOBALS['MESSAGE_KEY'] = $message_key;
 $GLOBALS['NONCE_KEY'] = $nonce_key;
+$GLOBALS['USER_ID_KEY'] = $user_id_key;
 // convert this one to ASCII because it is concatenated to the email address
 $GLOBALS['SALT'] = base64_encode($salt);
 
@@ -57,3 +57,4 @@ else {
     $_SESSION['tick_count'] += 1;
     $_SESSION['last_active'] = time();
 }
+

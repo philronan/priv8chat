@@ -75,3 +75,18 @@ function sc_password_verify($password, $hash) {
     $chkhash = base64_encode(openssl_digest($password, 'SHA256', 1));
     return password_verify($chkhash, $hash);
 }
+
+
+// User IDs are stored in cookies, but to make it hard for one user to
+// learn the identity of another, these IDs are encrypted.
+
+function user_id_encrypt($user_id) {
+    return base64_encode(openssl_encrypt(printf('%016x',$user_id), 'aes-128-ecb',
+        $GLOBALS['USER_ID_KEY'], OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING));
+}
+
+function user_id_decrypt($user_token) {
+    return intval(openssl_decrypt(base64_decode($user_token), 'aes-128-ecb',
+        $GLOBALS['USER_ID_KEY'], OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING), 16);
+}
+

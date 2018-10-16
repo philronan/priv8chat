@@ -30,7 +30,7 @@ function checkUserName() {
         $('#feedback-name').html('&nbsp;').removeClass('notok').addClass('ok');
         $.ajax({
           url: "../db/username-check.php",
-          data: { "n": n },
+          data: { "n": n, "nonce": nonce },
           dataType: "json"
         }).done(function(res) {
           if (res.name == $('#username').val()) {
@@ -64,8 +64,6 @@ function checkPassword() {
         return;
     }
     var result = zxcvbn($('#password').val(), [$('#username').val()]);
-    console.log($('#password').val(), [$('#username').val()]);
-    console.log(result);
     if ($('#password').val() == 'correct horse battery staple' || $('#password').val() == 'correcthorsebatterystaple') {
         result.score = 0;
         result.feedback.suggestions.push("That one's been used before!");
