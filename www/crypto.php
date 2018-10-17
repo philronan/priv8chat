@@ -77,8 +77,8 @@ function sc_password_verify($password, $hash) {
 }
 
 
-// User IDs are stored in cookies, but to make it hard for one user to
-// learn the identity of another, these IDs are encrypted.
+// User IDs are sequential numbers, but to make it hard for one user to
+// learn the identity of another, the values are encrypted. **TODO**
 
 function user_id_encrypt($user_id) {
     return base64_encode(openssl_encrypt(printf('%016x',$user_id), 'aes-128-ecb',
@@ -89,4 +89,3 @@ function user_id_decrypt($user_token) {
     return intval(openssl_decrypt(base64_decode($user_token), 'aes-128-ecb',
         $GLOBALS['USER_ID_KEY'], OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING), 16);
 }
-

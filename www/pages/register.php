@@ -1,8 +1,8 @@
 <?php
 
-if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
+if (!@$VIA_INDEX) die(''); // No output unless accessed via /index.php
 
-include $GLOBALS['APPROOT'] . '/crypto.php';
+// include $GLOBALS['APPROOT'] . '/crypto.php';
 
 $page_title = 'Register';
 
@@ -32,6 +32,23 @@ function random_token() {
     return $tok;
 }
 
+
+// Invite the user to log out if creating a separate account
+if ($_SESSION['logged_in']) {
+    $page_content = <<<END_PAGE
+<div class="jumbotron text-center">
+    <h1><span class="fa fa-user-secret"></span>Priv8Chat</h1>
+    <p>New User Registration</p>
+</div>
+<div class="container">
+    <div class="col-sm-12">
+    <p class="lead">You're already registered. If you want to create a separate account, please log out first. (Use the "Log out" link in the menu at the top of this page.)</p>
+</div>
+
+END_PAGE;
+    include $GLOBALS['APPROOT'] . '/views/main.php';
+    die();
+}
 
 // Add a random nonce to the form. Helps prevent cross-site request forgeries
 // $nonce = bin2hex(openssl_random_pseudo_bytes(16));

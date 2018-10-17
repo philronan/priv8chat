@@ -1,6 +1,6 @@
 <?php
 
-if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
+if (!@$VIA_INDEX) die(''); // No output unless accessed via /index.php
 
 $page_title = 'Cookie Statement';
 $page_content = <<<END_PAGE

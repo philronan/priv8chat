@@ -27,34 +27,11 @@ $GLOBALS['SALT'] = base64_encode($salt);
 // Remove the master key from memory. Not sure this is necessary, but anyway...
 unset($key, $SECRET_KEYS);
 
-
+include $GLOBALS['APPROOT'] . '/crypto.php';
 
 // Connect to database
 
 $mysqli = new mysqli('localhost', $GLOBALS['DBUSER'], $GLOBALS['DBPASS'], $GLOBALS['DBNAME']);
 if ($mysqli->connect_errno) {
-    die('Failed to connect to MySQL: ' . $mysqli->connect_error);
+    die (sprintf(_("Failed to connect to MySQL: %s"), $mysqli->connect_error));
 }
-
-ini_set('session.name', 'SecChat');
-ini_set('session.cookie_lifetime', 3600 * 24 * 60);
-ini_set('session.use_only_cookies', true);
-ini_set('session.cookie_httponly', true);
-if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
-    ini_set('session.cookie_secure', true);
-}
-
-if(!isset($_SESSION)) {
-    session_start();
-}
-
-if (!isset($_SESSION['tick_count'])) {
-    $_SESSION['tick_count'] = 1;
-    $_SESSION['start_time'] = time();
-    $_SESSION['last_active'] = time();
-}
-else {
-    $_SESSION['tick_count'] += 1;
-    $_SESSION['last_active'] = time();
-}
-

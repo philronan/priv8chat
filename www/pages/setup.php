@@ -1,6 +1,6 @@
 <?php
 
-if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
+if (!@$VIA_INDEX) die(''); // No output unless accessed via /index.php
 
 function randomPassword($numChars) {
     $alphabet = "256789bcdfghjkmnpqrstvwxz";
@@ -20,6 +20,7 @@ function randomPassword($numChars) {
 $db_name = "priv8chat";
 $db_user = "priv8chat_admin";
 $db_password = randomPassword(20);
+$mysqldpath = '/usr/bin/mysqldump --compact=TRUE';
 
 
 // Check the MySQL details provided by the user. If we can access the
@@ -33,6 +34,8 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $db_name = @$_POST['db-name'];
     $db_user = @$_POST['db-user'];
     $db_password = @$_POST['db-password'];
+    $mysqldpath = @$_POST['mysqldpath'];
+
     // Max length of DB/user name = 64 chars (https://dev.mysql.com/doc/refman/5.7/en/identifiers.html#idm140258615329280)
     if (preg_match('/^[0-9A-Za-z_-]{1,64}$/', $db_name) != 1) {
         $errors[] = _("The database name can only contain up to 64 ASCII letters, digits, underscores and hyphens");
@@ -62,6 +65,10 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (!@$mysqli->set_charset("utf8")) {
         $errors[] = sprintf(_("Can't change MySQL charset to utf8: %s"), $mysqli->error);
+        break;
+    }
+    if (preg_match('/mysqldump/i', exec($mysqldpath)) < 1) {
+        $errors[] = _("Unable to run mysqldump at that location");
         break;
     }
 
@@ -140,7 +147,7 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $master_key = bin2hex(openssl_random_pseudo_bytes(16));
     $pass_64 = base64_encode($db_password);
-    $config_txt = "DBNAME='$db_name'\nDBUSER='$db_user'\nDBPASS='$pass_64'\nMASTERKEY='$master_key'\n";
+    $config_txt = "DBNAME='$db_name'\nDBUSER='$db_user'\nDBPASS='$pass_64'\nMASTERKEY='$master_key'\nMYSQLDUMP=" . escapeshellarg($mysqldpath) . "\n";
     if (!@file_put_contents($GLOBALS['APPROOT'] . '/.config', $config_txt)) {
         $errors[] = sprintf(_("Can't create config file at %s. Please check the file/directory permissions"), $GLOBALS['APPROOT'] . '/.config');
         break;
@@ -182,11 +189,11 @@ $page_content = <<<END_PAGE
 <div class="container">
   <div class="row mb-1">
       <div class="col-sm-12">
-      <p class="lead">You're nearly there! All you need to do now is set up a
-          database for this application, and fill in the details below. The
-          database name, user namee and password have been pre-filled, but you
-          can change these values if you like. Just be sure to use a strong
-          password. When you've created the database, submit this form.</p>
+      <p class="lead">You're nearly there! All you need to do now is set up a MySQL
+          database and enter the database details and the path to your server's
+          <code>mysqldump</code> executable in the form below. These values have
+          been pre-filled, but you can change them if you like. Just be sure to use
+          a strong password. When you're ready, submit this form.</p>
 $error_report
       </div>
   </div>
@@ -218,6 +225,14 @@ $error_report
           title="Printable ASCII and spaces only. From 8 to 32 characters"
           pattern="[ -~]{8,}" required onchange="update_sql()"
           value="$db_password">
+      </div>
+      <div class="form-group">
+        <label for="mysqldpath">Path to <code>mysqldump</code>:</label>
+        <input type="text" class="form-control" id="mysqldpath" name="mysqldpath"
+          placeholder="(Printable ASCII characters and spaces only.)"
+          title="Printable ASCII and spaces only."
+          pattern="[ -~]+" required
+          value="$mysqldpath">
       </div>
       <div class="text-center">
         <a href="javascript:" class="btn-like btn btn-secondary" data-toggle="modal" data-target="#myModal">Generate MySQL code</a>

@@ -1,5 +1,9 @@
 <?php
 
+// I had plans to check the availability of user names with an AJAX script
+// during signup and when writing messages. Maybe some other time...
+
+/*
 $APPROOT = dirname(dirname(__FILE__)); // **TODO** Fix ugly code
 include("$APPROOT/db/connect.php");    // (should indlude /index.php instead)
 include("$APPROOT/crypto.php");
@@ -25,3 +29,4 @@ header("Content-Type: application/json; charset=utf-8");
 header("Content-Length: " . strlen($result));
 echo $result;
 
+*/

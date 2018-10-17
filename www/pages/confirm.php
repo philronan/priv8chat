@@ -1,7 +1,7 @@
 <?php
 
-if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
-include $GLOBALS['APPROOT'] . '/crypto.php';
+if (!@$VIA_INDEX) die(''); // No output unless accessed via /index.php
+// include $GLOBALS['APPROOT'] . '/crypto.php';
 
 $username = strtolower(@$_GET['name']);
 $token = @$_GET['token'];

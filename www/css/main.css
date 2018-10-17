@@ -22,13 +22,17 @@ body.setup {
     background-color: #222;
 }
 
-h1, h2, h3, h4, h5 {
+nav.bg-dark {
+    background-color: rgba(0,0,0,0.8) !important;
+    border-bottom: 1px solid rgba(120,160,240,0.5);
+}
+
+h1, a.navbar-brand {
     font-family: 'Share Tech Mono', monospace;
     font-weight: normal;
-}
-h1 {
     text-transform: uppercase;
 }
+
 .jumbotron {
     background: none;
     margin-bottom:0;
@@ -60,23 +64,23 @@ h1 {
 }
 
 .card > a:link, .card > a:visited, .card > a:hover, .card > a:active {
-    text-decoration: inherit;
+    text-decoration: inherit !important;
     color: inherit;
 }
 
-input[type=text], input[type=password], input[type=email] {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
+input[type=text], input[type=password], input[type=email], textarea {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: #fff !important;
     border: 1px solid #56a;
 }
 
-input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
-    background-color: rgba(0, 0, 0, 1);
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, textarea:focus {
+    background-color: rgba(0, 0, 0, 1) !important;
 }
 
-.input-group-text {
+.input-group-text, textarea {
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid #56a;
+    border: 1px solid #56a !important;
 }
 
 input:valid {
@@ -140,7 +144,8 @@ textarea {
     background-color: rgba(0,0,0,0.5);
     border: 2px solid rgba(50,60,100,0.85);
     padding: 0.5em 1em;
-    font-family: monospace;
+    font-family: 'Open Sans', sans-serif;
+    white-space: pre-wrap;
     color: #789;
 }
 
@@ -166,6 +171,18 @@ textarea {
 
 .fixed-bottom {
     background-color: rgba(0, 0, 0, 0.75);
+}
+
+.post-link {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.5);
+    cursor: pointer;
+}
+
+.post-link:hover {
+    color: rgba(255,255,255,.75);
+    text-shadow: 0 0 3px #fff;
 }
 
 body {
@@ -199,6 +216,51 @@ code {
     font-weight: normal;
     color: #bbd;
     font-size: 100%;
+}
+
+.mailbox {
+    color: #ddd;
+}
+.mailbox .row {
+    border-bottom: 1px solid rgba(100,130,250,0.5);
+}
+.mailbox .row div {
+    font-size: 0.8rem;
+    padding-right: 0;
+}
+
+.mailbox div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mailbox .date {
+    background-color:#89d;
+    color: #000;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 0.1em 0.25em;
+    border-radius: 0.5em;
+    margin-right: 0.5em;
+}
+
+.mailbox .sender {
+    font-weight: bold;
+}
+
+.mailbox a:link, .mailbox a:visited, .mailbox a:active {
+    color: inherit;
+    text-decoration: none;
+    text-shadow: inherit;
+}
+.mailbox a:hover {
+    text-shadow: 0 0 3px #fff;
+}
+
+.unread {
+    color: #fff;
+    background-color: rgba(128,160,255,0.2);
 }
 
 @media(max-width:767px) {

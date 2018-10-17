@@ -1,10 +1,10 @@
 <?php
 
-define('TESTING', true);
+define('TESTING', false);
 
-if (0 && !$VIA_INDEX) die(''); // No output unless accessed via /index.php
+if (!$VIA_INDEX) die(''); // No output unless accessed via /index.php
 
-define('FROM_ADDRESS', 'robot@justmyl.uk');
+define('FROM_ADDRESS', 'robot@' . $_SERVER['HTTP_HOST']);
 
 
 function signup_email($username, $email, $token) {

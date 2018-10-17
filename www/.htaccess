@@ -1,5 +1,7 @@
 RewriteEngine on
 
+Options -Indexes
+
 # Deny access to hidden files and directories
 RewriteRule "(^|/)\." - [F]
 
@@ -8,4 +10,3 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Otherwise process request with index.php
 RewriteRule (.*) index.php/$1 [L]
-
