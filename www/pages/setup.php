@@ -67,7 +67,7 @@ while ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = sprintf(_("Can't change MySQL charset to utf8: %s"), $mysqli->error);
         break;
     }
-    if (preg_match('/mysqldump/i', exec($mysqldpath)) < 1) {
+    if (preg_match('/mysqldump/i', exec("$mysqldpath -V")) < 1) {
         $errors[] = _("Unable to run mysqldump at that location");
         break;
     }
