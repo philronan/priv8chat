@@ -1,3 +1,5 @@
+**Live demo: [https://chat.justmyl.uk/](https://chat.justmyl.uk/)**
+
 A few extra notes on installation:
 ----------------------------------
 
